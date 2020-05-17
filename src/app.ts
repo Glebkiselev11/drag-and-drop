@@ -13,8 +13,10 @@ class Project {
 
 
 // Project State Management
+type Listener = (items: Project[]) => void;
+
 class ProjectState {
-	private listeners: any[] = [];
+	private listeners: Listener[] = [];
 	private projects: Project[] = [];
 	
 	// Singleton
@@ -32,7 +34,7 @@ class ProjectState {
 		return this.instance;
 	}
 
-	public addListener(listenerFn: Function) {
+	public addListener(listenerFn: Listener) {
 		this.listeners.push(listenerFn);
 	}
 
@@ -118,7 +120,7 @@ class ProjectList {
 		this.element = importedNode.firstElementChild as HTMLElement;
 		this.element.id = `${this.type}-projects`;
 
-		projectState.addListener((projects: any[]) => {
+		projectState.addListener((projects: Project[]) => {
 			this.assignedProjects = projects;
 			this.renderProjects();
 		});
