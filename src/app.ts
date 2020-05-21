@@ -157,7 +157,8 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 }
 
 // ProjectItem Class
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> 
+	implements Draggable {
 	private project: Project;
 
 	get persons() {
@@ -166,7 +167,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
 		} else {
 			return `${this.project.people} persons`
 		}
-	}
+	};
 
 	
 	constructor(hostId: string, project: Project) {
@@ -175,9 +176,23 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
 
 		this.configure();
 		this.renderContent();
-	}
+	};
 
-	configure() {};
+	@autobind
+	dragStartHandler(event: DragEvent) {
+		console.log(event);
+	};
+
+	@autobind
+	dragEndHandler(_: DragEvent) {
+		console.log('dragEnd');
+	};
+
+	configure() {
+		this.element.addEventListener('dragstart', this.dragStartHandler);
+		this.element.addEventListener('dragend', this.dragEndHandler)
+	};
+
 	renderContent() {
 		this.element.querySelector('h2')!.textContent = this.project.title;
 		this.element.querySelector('h3')!.textContent = this.persons + ' assigned';
